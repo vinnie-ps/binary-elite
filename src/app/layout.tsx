@@ -1,37 +1,32 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import { NotificationProvider } from "@/context/NotificationContext";
-import { SmartsuppChat } from "@/components/ui/SmartsuppChat";
+import type { Metadata } from 'next'
+import { Inter, Outfit } from 'next/font/google'
+import './globals.css'
+import { createClient } from '@/lib/supabase/server'
+import { Toaster } from 'sonner'
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
+const outfit = Outfit({ subsets: ['latin'], variable: '--font-outfit' })
 
 export const metadata: Metadata = {
-  title: "Binary Elite",
-  description: "Premium development services",
-};
+  title: 'Binary Elite | Elite Tech Education',
+  description: 'A collective of developers, designers, and AI builders pushing the boundaries of learning through technology.',
+  icons: {
+    icon: '/icon.png',
+  },
+}
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <NotificationProvider>
-          {children}
-        </NotificationProvider>
-        <SmartsuppChat />
+    <html lang="en" className={`${inter.variable} ${outfit.variable}`}>
+      <body className="bg-[var(--color-bg-dark)] text-[var(--color-text-primary)] antialiased relative">
+        {children}
+        <Toaster theme="dark" position="bottom-right" />
       </body>
     </html>
-  );
+  )
 }

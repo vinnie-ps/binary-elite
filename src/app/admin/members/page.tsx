@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { Search, UserCheck, UserX, User, Shield, Briefcase, Mail, Phone, MapPin } from 'lucide-react'
+import { Search, UserCheck, UserX, User, Shield, Briefcase, Mail, Phone, MapPin, Award } from 'lucide-react'
 import { motion } from 'framer-motion'
+import Link from 'next/link'
 
 type Profile = {
     id: string
@@ -19,7 +20,6 @@ type Profile = {
     profile_photo_url: string | null
     portfolio_images: string[] | null
     consent_to_feature: boolean | null
-    is_featured: boolean | null
     billing_plan?: string
     billing_status?: string
     created_at?: string
@@ -346,30 +346,13 @@ export default function MembersPage() {
 
                         <div className="mt-8 pt-6 border-t border-[var(--color-border)] flex justify-between items-center">
                             {selectedMember.joining_reason === 'partner' && selectedMember.consent_to_feature && (
-                                <button
-                                    onClick={async (e) => {
-                                        e.stopPropagation()
-                                        const newFeatured = !selectedMember.is_featured
-                                        const { error } = await supabase
-                                            .from('profiles')
-                                            .update({ is_featured: newFeatured })
-                                            .eq('id', selectedMember.id)
-
-                                        if (!error) {
-                                            setSelectedMember({ ...selectedMember, is_featured: newFeatured })
-                                            setRefreshTrigger(prev => prev + 1)
-                                        }
-                                    }}
-                                    className={`
-                                        px-4 py-2 rounded-lg font-medium transition-colors border
-                                        ${selectedMember.is_featured
-                                            ? 'bg-purple-500/10 text-purple-400 border-purple-500/30 hover:bg-purple-500/20'
-                                            : 'bg-[var(--color-bg-darker)] text-[var(--color-text-secondary)] border-[var(--color-border)] hover:text-white'
-                                        }
-                                    `}
+                                <Link
+                                    href={`/admin/featured-members?profileId=${selectedMember.id}`}
+                                    className="px-4 py-2 rounded-lg font-medium transition-colors border bg-purple-500/10 text-purple-400 border-purple-500/30 hover:bg-purple-500/20 flex items-center gap-2"
                                 >
-                                    {selectedMember.is_featured ? '✨ Featured on Homepage' : 'Feature on Homepage'}
-                                </button>
+                                    <Award className="w-4 h-4" />
+                                    Manage in Gallery
+                                </Link>
                             )}
 
                             <button

@@ -5,7 +5,9 @@ import Features from '@/components/landing/Features'
 import Projects from '@/components/landing/Projects'
 import Exclusive from '@/components/landing/Exclusive'
 import Footer from '@/components/landing/Footer'
-import FeaturedPartners from '@/components/landing/FeaturedPartners'
+import MemberGallery from '@/components/landing/MemberGallery'
+import PublicNews from '@/components/landing/PublicNews'
+import SuccessStories from '@/components/landing/SuccessStories'
 
 export const revalidate = 0 // Revalidate every 0 seconds
 
@@ -69,7 +71,11 @@ export default async function Home() {
 
         <Projects projects={projects} />
 
-        <FeaturedPartners />
+        <MemberGallery />
+
+        <PublicNews />
+
+        <SuccessStories />
 
         <Exclusive
           title={settings.exclusive_title || "Who It's For"}

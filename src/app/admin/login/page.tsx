@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
-export default function AdminLogin() {
+function AdminLoginContent() {
     const router = useRouter()
     const searchParams = useSearchParams()
     const [email, setEmail] = useState('')
@@ -108,5 +108,13 @@ export default function AdminLogin() {
                 </p>
             </div>
         </div>
+    )
+}
+
+export default function AdminLogin() {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-[var(--color-bg-dark)] flex items-center justify-center text-[var(--color-text-muted)]">Loading encryption keys...</div>}>
+            <AdminLoginContent />
+        </Suspense>
     )
 }

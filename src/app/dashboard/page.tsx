@@ -3,7 +3,7 @@
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { LogOut, User, Settings, Bell, Lock, AlertCircle, Zap, Wrench, BookOpen, ExternalLink, Mail } from 'lucide-react'
+import { LogOut, User, Settings, Bell, Lock, AlertCircle, Zap, Wrench, BookOpen, ExternalLink, Mail, Quote } from 'lucide-react'
 import { NotificationBell } from '@/components/ui/NotificationBell'
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
@@ -380,8 +380,24 @@ export default function DashboardPage() {
                     </section>
                 )}
 
-                {/* 1.5 News & Resources Quick Access */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
+                {/* 1.5 News & Resources & Stories Quick Access */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+                    {/* Success Stories Widget */}
+                    <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-6 relative overflow-hidden group hover:border-pink-500/50 transition-colors">
+                        <div className="flex items-center justify-between mb-4">
+                            <div className="flex items-center gap-2">
+                                <div className="p-2 bg-pink-500/10 rounded-lg text-pink-400">
+                                    <Quote className="w-5 h-5" />
+                                </div>
+                                <h3 className="font-bold text-lg">Success Stories</h3>
+                            </div>
+                            <Link href="/dashboard/stories" className="text-sm text-pink-400 hover:underline">View All</Link>
+                        </div>
+                        <p className="text-sm text-[var(--color-text-muted)] mb-4">
+                            Share your journey and see how others are achieving their goals.
+                        </p>
+                        <InteractionButton label="Share Story" href="/dashboard/stories" />
+                    </div>
                     {/* Latest News Widget */}
                     <div className="bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-2xl p-6 relative overflow-hidden group hover:border-[var(--color-accent-blue)] transition-colors">
                         <div className="flex items-center justify-between mb-4">

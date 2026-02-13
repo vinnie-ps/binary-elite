@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
-import { LayoutDashboard, FolderKanban, Sparkles, Settings, FileText, LogOut, Menu, X, User, Mail } from 'lucide-react'
+import { LayoutDashboard, FolderKanban, Sparkles, Settings, FileText, LogOut, Menu, X, User, Mail, Award, Megaphone, MessageSquare } from 'lucide-react'
 import { NotificationBell } from '@/components/ui/NotificationBell'
 
 export default function AdminLayout({
@@ -31,7 +31,11 @@ export default function AdminLayout({
         { name: 'Resources', href: '/admin/resources', icon: FolderKanban }, // Reusing FolderKanban or similar
         { name: 'Tools', href: '/admin/tools', icon: Settings },
         { name: 'Classes', href: '/admin/classes', icon: FileText },
+        { name: 'Featured Members', href: '/admin/featured-members', icon: Award },
+        { name: 'Testimonials', href: '/admin/testimonials', icon: MessageSquare },
+        { name: 'Announcements', href: '/admin/announcements', icon: Megaphone },
         { name: 'Members', href: '/admin/members', icon: User },
+        { name: 'My Profile', href: '/admin/profile', icon: User },
         { name: 'Messages', href: '/admin/messages', icon: Mail },
         { name: 'Settings', href: '/admin/settings', icon: Settings },
         { name: 'Applications', href: '/admin/applications', icon: FileText },
