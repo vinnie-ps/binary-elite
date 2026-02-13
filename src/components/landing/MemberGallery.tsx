@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { User, Award, ExternalLink, Twitter, Linkedin, Github, Facebook, Instagram, Youtube, Music } from 'lucide-react'
+import { User, Award, ExternalLink, Twitter, Linkedin, Github, Facebook, Instagram, Youtube, Music, Globe } from 'lucide-react'
 import Image from 'next/image'
 
 type FeaturedMember = {
@@ -197,6 +197,7 @@ export default function MemberGallery() {
                                                 case 'instagram': return <Instagram className="w-4 h-4" />;
                                                 case 'youtube': return <Youtube className="w-4 h-4" />;
                                                 case 'tiktok': return <Music className="w-4 h-4" />;
+                                                case 'portfolio': return <Globe className="w-4 h-4" />;
                                                 default: return <ExternalLink className="w-4 h-4" />;
                                             }
                                         };

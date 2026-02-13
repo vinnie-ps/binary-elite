@@ -40,7 +40,7 @@ function FeaturedMembersContent() {
         role_in_community: '',
         contributions: [''],
         profile_image_url: '',
-        social_links: { twitter: '', linkedin: '', github: '', facebook: '', instagram: '', tiktok: '', youtube: '' },
+        social_links: { twitter: '', linkedin: '', github: '', facebook: '', instagram: '', tiktok: '', youtube: '', portfolio: '' },
         is_featured: true,
         display_order: 0
     })
@@ -124,7 +124,7 @@ function FeaturedMembersContent() {
             role_in_community: '',
             contributions: [''],
             profile_image_url: '',
-            social_links: { twitter: '', linkedin: '', github: '', facebook: '', instagram: '', tiktok: '', youtube: '' },
+            social_links: { twitter: '', linkedin: '', github: '', facebook: '', instagram: '', tiktok: '', youtube: '', portfolio: '' },
             is_featured: true,
             display_order: 0
         })
@@ -146,7 +146,8 @@ function FeaturedMembersContent() {
                 facebook: member.social_links?.facebook || '',
                 instagram: member.social_links?.instagram || '',
                 tiktok: member.social_links?.tiktok || '',
-                youtube: member.social_links?.youtube || ''
+                youtube: member.social_links?.youtube || '',
+                portfolio: member.social_links?.portfolio || ''
             },
             is_featured: member.is_featured,
             display_order: member.display_order
@@ -170,24 +171,30 @@ function FeaturedMembersContent() {
                     .eq('id', editingMember.id)
                 if (error) throw error
             } else {
+                // Check if already featured
+                const { data: existing } = await supabase
+                    .from('featured_members')
+                    .select('id')
+                    .eq('profile_id', formData.profile_id)
+                    .single()
+
+                if (existing) {
+                    alert('This member is already featured. Please search for them and edit their entry instead.')
+                    return
+                }
+
                 const { error } = await supabase
                     .from('featured_members')
                     .insert([payload])
                 if (error) throw error
             }
 
-            // Sync with profile.is_featured
-            await supabase
-                .from('profiles')
-                .update({ is_featured: formData.is_featured })
-                .eq('id', formData.profile_id)
-
             setIsModalOpen(false)
             resetForm()
             fetchData()
         } catch (error: any) {
-            console.error('Error saving member:', error)
-            alert(error.message || 'Error saving member')
+            console.error('Error saving member:', JSON.stringify(error, null, 2))
+            alert(error.message || 'Error saving member. Check console for details.')
         }
     }
 
@@ -201,12 +208,6 @@ function FeaturedMembersContent() {
                 .eq('id', id)
 
             if (error) throw error
-
-            // Unset profile.is_featured
-            await supabase
-                .from('profiles')
-                .update({ is_featured: false })
-                .eq('id', profileId)
 
             fetchData()
         } catch (error) {
@@ -425,20 +426,32 @@ function FeaturedMembersContent() {
                             {/* Social Links */}
                             <div>
                                 <label className="block text-sm font-medium mb-2">Social Links</label>
-                                <div className="grid grid-cols-2 gap-3">
-                                    {Object.keys(formData.social_links).map((platform) => (
-                                        <input
-                                            key={platform}
-                                            type="url"
-                                            placeholder={`${platform.charAt(0).toUpperCase() + platform.slice(1)} URL`}
-                                            value={formData.social_links[platform as keyof typeof formData.social_links]}
-                                            onChange={(e) => setFormData({
-                                                ...formData,
-                                                social_links: { ...formData.social_links, [platform]: e.target.value }
-                                            })}
-                                            className="w-full px-4 py-2 bg-[var(--color-bg-darker)] border border-[var(--color-border)] rounded-lg text-sm"
-                                        />
-                                    ))}
+                                <div className="space-y-3">
+                                    <input
+                                        type="url"
+                                        placeholder="Portfolio URL (e.g. personal website)"
+                                        value={formData.social_links.portfolio}
+                                        onChange={(e) => setFormData({
+                                            ...formData,
+                                            social_links: { ...formData.social_links, portfolio: e.target.value }
+                                        })}
+                                        className="w-full px-4 py-2 bg-[var(--color-bg-darker)] border border-[var(--color-border)] rounded-lg text-sm border-l-4 border-l-[var(--color-accent-blue)]"
+                                    />
+                                    <div className="grid grid-cols-2 gap-3">
+                                        {Object.keys(formData.social_links).filter(k => k !== 'portfolio').map((platform) => (
+                                            <input
+                                                key={platform}
+                                                type="url"
+                                                placeholder={`${platform.charAt(0).toUpperCase() + platform.slice(1)} URL`}
+                                                value={formData.social_links[platform as keyof typeof formData.social_links]}
+                                                onChange={(e) => setFormData({
+                                                    ...formData,
+                                                    social_links: { ...formData.social_links, [platform]: e.target.value }
+                                                })}
+                                                className="w-full px-4 py-2 bg-[var(--color-bg-darker)] border border-[var(--color-border)] rounded-lg text-sm"
+                                            />
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
 

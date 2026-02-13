@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { Save, Upload, User, Award, ExternalLink, X, Twitter, Linkedin, Github, Facebook, Instagram, Youtube, Music } from 'lucide-react'
+import { Save, Upload, User, Award, ExternalLink, X, Twitter, Linkedin, Github, Facebook, Instagram, Youtube, Music, Globe } from 'lucide-react'
 import Image from 'next/image'
 
 type Profile = {
@@ -25,6 +25,7 @@ type FeaturedInfo = {
         instagram: string
         tiktok: string
         youtube: string
+        portfolio: string
     }
     is_featured: boolean
     profile_image_url: string
@@ -49,7 +50,7 @@ export default function AdminProfilePage() {
         gallery_bio: '',
         role_in_community: '',
         contributions: [''],
-        social_links: { twitter: '', linkedin: '', github: '', facebook: '', instagram: '', tiktok: '', youtube: '' },
+        social_links: { twitter: '', linkedin: '', github: '', facebook: '', instagram: '', tiktok: '', youtube: '', portfolio: '' },
         is_featured: false,
         profile_image_url: ''
     })
@@ -102,7 +103,8 @@ export default function AdminProfilePage() {
                     facebook: featuredData.social_links?.facebook || '',
                     instagram: featuredData.social_links?.instagram || '',
                     tiktok: featuredData.social_links?.tiktok || '',
-                    youtube: featuredData.social_links?.youtube || ''
+                    youtube: featuredData.social_links?.youtube || '',
+                    portfolio: featuredData.social_links?.portfolio || ''
                 },
                 is_featured: featuredData.is_featured || false,
                 profile_image_url: featuredData.profile_image_url || ''
@@ -156,8 +158,7 @@ export default function AdminProfilePage() {
                 .update({
                     full_name: profile.full_name,
                     profile_photo_url: profile.profile_photo_url,
-                    // If they enable featured here, also sync the flag locally
-                    is_featured: featured.is_featured
+                    // is_featured sync removed (unified system)
                 })
                 .eq('id', userId)
 
@@ -372,30 +373,47 @@ export default function AdminProfilePage() {
                             {/* Social Links Grid */}
                             <div>
                                 <label className="block text-sm font-medium mb-2">Social Links</label>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    {Object.entries(featured.social_links).map(([key, val]) => (
-                                        <div key={key} className="relative">
-                                            <div className="absolute left-3 top-2.5 text-[var(--color-text-muted)]">
-                                                {key === 'twitter' && <Twitter className="w-4 h-4" />}
-                                                {key === 'linkedin' && <Linkedin className="w-4 h-4" />}
-                                                {key === 'github' && <Github className="w-4 h-4" />}
-                                                {key === 'facebook' && <Facebook className="w-4 h-4" />}
-                                                {key === 'instagram' && <Instagram className="w-4 h-4" />}
-                                                {key === 'youtube' && <Youtube className="w-4 h-4" />}
-                                                {key === 'tiktok' && <Music className="w-4 h-4" />}
-                                            </div>
-                                            <input
-                                                type="url"
-                                                placeholder={`${key.charAt(0).toUpperCase() + key.slice(1)} URL`}
-                                                value={val}
-                                                onChange={(e) => setFeatured({
-                                                    ...featured,
-                                                    social_links: { ...featured.social_links, [key]: e.target.value }
-                                                })}
-                                                className="w-full pl-10 pr-4 py-2 bg-[var(--color-bg-darker)] border border-[var(--color-border)] rounded-lg text-sm"
-                                            />
+                                <div className="space-y-4">
+                                    <div className="relative">
+                                        <div className="absolute left-3 top-2.5 text-[var(--color-accent-blue)]">
+                                            <Globe className="w-4 h-4" />
                                         </div>
-                                    ))}
+                                        <input
+                                            type="url"
+                                            placeholder="My Portfolio URL (e.g. personal website)"
+                                            value={featured.social_links.portfolio}
+                                            onChange={(e) => setFeatured({
+                                                ...featured,
+                                                social_links: { ...featured.social_links, portfolio: e.target.value }
+                                            })}
+                                            className="w-full pl-10 pr-4 py-2 bg-[var(--color-bg-darker)] border border-[var(--color-accent-blue)]/50 rounded-lg text-sm focus:border-[var(--color-accent-blue)] outline-none"
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                        {Object.entries(featured.social_links).filter(([key]) => key !== 'portfolio').map(([key, val]) => (
+                                            <div key={key} className="relative">
+                                                <div className="absolute left-3 top-2.5 text-[var(--color-text-muted)]">
+                                                    {key === 'twitter' && <Twitter className="w-4 h-4" />}
+                                                    {key === 'linkedin' && <Linkedin className="w-4 h-4" />}
+                                                    {key === 'github' && <Github className="w-4 h-4" />}
+                                                    {key === 'facebook' && <Facebook className="w-4 h-4" />}
+                                                    {key === 'instagram' && <Instagram className="w-4 h-4" />}
+                                                    {key === 'youtube' && <Youtube className="w-4 h-4" />}
+                                                    {key === 'tiktok' && <Music className="w-4 h-4" />}
+                                                </div>
+                                                <input
+                                                    type="url"
+                                                    placeholder={`${key.charAt(0).toUpperCase() + key.slice(1)} URL`}
+                                                    value={val}
+                                                    onChange={(e) => setFeatured({
+                                                        ...featured,
+                                                        social_links: { ...featured.social_links, [key]: e.target.value }
+                                                    })}
+                                                    className="w-full pl-10 pr-4 py-2 bg-[var(--color-bg-darker)] border border-[var(--color-border)] rounded-lg text-sm"
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
 
